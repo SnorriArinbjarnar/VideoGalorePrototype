@@ -1,0 +1,31 @@
+
+
+
+Classes:
+
+Video:
+- Title
+- Director
+- Type
+- Release Date
+- EIDR
+
+
+Friends
+- Name
+- Address
+- Email
+- Telephone
+
+
+Registry
+- Einhverskonar component sem inniheldur Friend og Video
+(hugsanlega Borrowed Class)
+- Gæti husganlega séð þá um að búa til report
+- 
+
+
+Borrowed(Friend, Video):
+- Friend
+- Video
+- Date borrowed

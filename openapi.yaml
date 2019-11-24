@@ -1,0 +1,131 @@
+openapi: '3.0.0'
+info:
+  description: This main.is a sample for a server containing list of videos
+  version: 1.0.0
+  title: Videos
+  contact:
+    email: snorriarinbjarnar@gmail.com
+host: petstore.swagger.io
+basePath: /api/v1
+tags:
+  - name: Videos
+    description: everything about your videos
+  - name: Doors
+    description: exciting things about doors
+schemes:
+  - http
+  - https
+paths:
+
+  /videos:
+    get:
+      tags:
+        - Videos
+      summary: Gives us list of all videos
+      description: 'This main.is a get request for all videos '
+      operationId: getVideos
+      responses:
+        "200":
+          description: "Array of videos"
+          content:
+            application/json:
+              schema:
+                type: array 
+                items:
+                  $ref: "#/definitions/Videos"
+              
+    post:
+      tags: 
+      - Videos
+      summary: "Create a new Video"
+      
+      requestBody:
+        description: "Video to add to store"
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/definitions/Video"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/definitions/Video"
+    
+        
+         
+          
+  /videos/view/{id}:
+    get:
+      tags:
+        - Videos
+      summary: view a video
+      description: 'This endpoint '
+      parameters:
+        - name: id
+          in: path
+          description: This main.is the unique identifier
+          required: true
+          schema:
+            type: integer
+            example: 54
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/definitions/Video"
+                
+                
+                
+  /videos/delete/{id}:
+    delete:
+      tags:
+      - Videos
+      description: "Delete a video by id"
+      parameters:
+      - name: id
+        in: path
+        description: "ID of video to delete"
+        required: true
+        schema:
+          type: integer
+          
+      responses:
+        "204":
+          description: "Video deleted"
+                  
+          
+definitions:
+  Video:
+    type: object
+    properties:
+      id:
+        type: integer
+        example: 54
+      director:
+        type: string
+        example: "John Smith"
+      title:
+        type: string
+        example: "The Nun"
+      eidr:
+        type: string
+        example: "fff10102020"
+      releaseDate:
+        type: string
+        format: "YYYY-MM-DD"
+        example: "1986-10-31"
+      videoType:
+        type: boolean 
+        example: 0
+        
+  Videos:
+    description: "Videos in plural"
+    type: array 
+    items:
+      $ref: "#/definitions/Video"
+      

@@ -1,0 +1,823 @@
+openapi: 3.0.0
+info:
+  description: This is a sample for a server containing list of videos
+  version: 1.0.0
+  title: VideoMax Galaxy
+  contact:
+    email: snorriarinbjarnar@gmail.com
+servers:
+  - url: 'http://localhost:8080/api'
+tags:
+  - name: Videos
+    description: everything about your videos
+  - name: Friends
+    description: Info about registered friends
+  - name: Reviews
+    description: Everything about reviews
+  - name: Recommendations
+    description: Recommendations for users
+    
+paths:
+  /videos:
+    get:
+      tags:
+        - Videos
+      summary: Gives us list of all videos
+      description: 'This is a get request for all videos '
+      operationId: getVideos
+      responses:
+        '200':
+          description: Array of videos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Videos'
+        '404':
+          description: Not found
+        '5XX':
+          description: Unexpected Error
+          
+    post:
+      tags:
+        - Videos
+      summary: Create a new Video
+      operationId: addVideo
+      requestBody:
+        description: Video to add to store
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Video'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Video'
+                
+                
+  '/videos/{id}':
+    get:
+      tags:
+        - Videos
+      summary: view a video
+      operationId: showVideoById
+      description: 'This endpoint '
+      parameters:
+        - name: id
+          in: path
+          description: This is the unique identifier
+          required: true
+          schema:
+            type: integer
+            example: 54
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Videos'
+        '400':
+          description: Bad Request. ID must be integer and larger than 0
+        '404':
+          description: User with specified ID not found
+        '5XX':
+          description: Unexpected Error
+                
+    delete:
+      tags:
+        - Videos
+      description: Delete a video by id
+      operationId: deleteVideoById
+      parameters:
+        - name: id
+          in: path
+          description: ID of video to delete
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Video deleted
+        '400':
+          description: Bad Request. ID must be integer and larger than 0
+        '404':
+          description: User with specified ID not found
+        '5XX':
+          description: Unexpected Error
+          
+    put:
+      tags:
+        - Videos
+      description: Update a video
+      operationId: updateVideoById
+      parameters:
+        - name: id
+          in: path
+          description: ID of video to delete
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Video'
+      responses:
+        '204':
+          description: Video updated
+        '400':
+          description: Bad Request. ID must be integer and larger than 0
+        '404':
+          description: Video with specified ID not found
+        '5XX':
+          description: Unexpected Error  
+          
+  /friends:
+    get:
+      tags:
+        - Friends
+      summary: Gives us list of all registered friends
+      description: 'This is a get request for all friends '
+      operationId: getFriends
+      responses:
+        '200':
+          description: Array of friends
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Friends'
+        '404':
+          description: Not found
+        '5XX':
+          description: Unexpected Error        
+    post:
+      tags:
+        - Friends
+      summary: Create a new Friend
+      operationId: addAFriend
+      requestBody:
+        description: Friend to add to store
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Friend'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Friend'
+                
+  '/friends/{id}':
+    get:
+      tags:
+        - Friends
+      summary: view a friend
+      description: 'This endpoint '
+      operationId: getFriendById
+      parameters:
+        - name: id
+          in: path
+          description: This is the unique identifier
+          required: true
+          schema:
+            type: integer
+            example: 54
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Friend'
+        '400':
+          description: Bad Request. ID must be integer and larger than 0
+        '404':
+          description: Friend with specified ID not found
+        '5XX':
+          description: Unexpected Error         
+                
+    delete:
+      tags:
+        - Friends
+      description: Delete a friend by id
+      operationId: deleteFriendById
+      parameters:
+        - name: id
+          in: path
+          description: ID of friend to delete
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: friend deleted
+        '400':
+          description: Bad Request. ID must be integer and larger than 0
+        '404':
+          description: Friend with specified ID not found
+        '5XX':
+          description: Unexpected Error   
+  
+    put:
+      tags:
+        - Friends
+      description: Update a friend
+      operationId: updateFriendById
+      parameters:
+        - name: id
+          in: path
+          description: ID of friend to update
+          required: true
+          schema:
+            type: integer
+            example: 54
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Friend"
+      responses:
+        '204':
+          description: Friend updated
+        '400':
+          description: Bad Request. ID must be integer and larger than 0
+        '404':
+          description: Friend with specified ID not found
+        '5XX':
+          description: Unexpected Error     
+          
+          
+  /borrowed:
+    get:
+      tags:
+        - Borrowed
+      summary: Gives us list of all loans and to whom
+      description: 'This is a get request for all videos '
+      operationId: getLoans
+      parameters:
+        - in: query
+          name: date
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: Array of Loans
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BorrowPlural'
+        '404':
+          description: Not found
+        '5XX':
+          description: Unexpected Error        
+    post:
+      tags:
+        - Borrowed
+      summary: Create a new Borrow
+      operationId: createLoan
+      requestBody:
+        description: New loan to manage
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BorrowSingular'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BorrowSingular'
+                
+
+                
+  '/borrowed/loanedTapes/{ldate}':
+    get:
+      tags:
+        - Borrowed
+      summary: View loaned tapes by date
+      operationId: getLoanedTapesByDate
+      description: 'THis'
+      parameters:
+        - name: ldate
+          in: path
+          description: date tape was loaned
+          required: true
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: Successfully got tapes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Videos'
+          
+                
+                
+  '/borrowed/loanedToFriends/{ldate}':
+    get:
+      tags:
+        - Borrowed
+      summary: View Friends with loaned tapes
+      operationId: getFriendsWithLoanedTapesByDate
+      description: 'THis'
+      parameters:
+        - name: ldate
+          in: path
+          description: date tape was loaned
+          required: true
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: Successfully got tapes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Friends'     
+                
+                
+              
+  '/borrowed/forgottenTapes/{ldate}':
+    get:
+      tags:
+        - Borrowed
+      summary: View Friends with tapes forgotten by time
+      description: view Friends with tapes for more than month given date
+      parameters:
+      - name: ldate
+        in: path
+        description: date tape was loaned
+        required: true
+        schema:
+          type: string
+          format: date
+      responses:
+        '200':
+           description: Sucessfully got loans
+           content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Friends'              
+                
+                
+                  
+
+                
+  '/borrowed/{borrowedId}':
+    get:
+      tags:
+        - Borrowed
+      summary: view certain loan of friend
+      operationId: getLoansById
+      description: 'This endpoint '
+      parameters:
+        - name: borrowedId
+          in: path
+          description: This is the unique identifier
+          required: true
+          schema:
+            type: integer
+            example: 45
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BorrowSingular'
+        '400':
+          description: Bad Request. borrowedId must be integer bigger or equal to 0
+        '404':
+          description: Loans with specified id not found
+        '5XX':
+          description: Unexpected Error           
+                
+    delete:
+      tags:
+        - Borrowed
+      summary: delete a loan
+      operationId: deleteLoanById
+      description: 'This endpoint '
+      parameters:
+        - name: borrowedId
+          in: path
+          description: This is the unique identifier
+          required: true
+          schema:
+            type: integer
+            example: 54
+      responses:
+        '204':
+          description: loan deleted
+        '400':
+          description: Bad Request. borrowedId must be integer bigger than or equal to 0
+        '404':
+          description: Loans with specified id not found
+        '5XX':
+          description: Unexpected Error     
+          
+    put:
+      tags:
+        - Borrowed
+      description: Update a loan
+      operationId: updateLoanById
+      parameters:
+        - name: borrowedId
+          in: path
+          description: ID of friend to update
+          required: true
+          schema:
+            type: integer
+            example: 54
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BorrowSingular'
+      responses:
+        '204':
+          description: loan updated
+        '400':
+          description: Bad Request. BorrowedId must be integer bigger or equal to 0
+        '404':
+          description: Loans with specified id not found
+        '5XX':
+          description: Unexpected Error   
+          
+  
+  /reviews:
+    get:
+      tags:
+      - Reviews
+      summary: list of all reviews 
+      operationId: getAllReviews
+      responses:
+        "200":
+          description: array of reviews
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Reviews"
+        '404':
+          description: Not found
+        '5XX':
+          description: Unexpected Error        
+                  
+    post:
+      tags:
+      - Reviews
+      summary: create a new review
+      operationId: createReview
+      requestBody:
+        description: new review for tape
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Review"
+      responses:
+        "200":
+          description: Ok creating a review
+          
+  '/reviews/{reviewId}':
+    get:
+      tags:
+      - Reviews
+      operationId: getReviewById
+      parameters: 
+        - name: reviewId
+          in: path
+          description: id of a review
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Successfully got review
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Reviews"
+        '400':
+          description: Bad Request. reviewId must be integer bigger or equal to 0
+        '404':
+          description: Review with specified id not found
+        '5XX':
+          description: Unexpected Error        
+                
+    delete:
+      tags:
+        - Reviews
+      description: Delete a review by id
+      operationId: deleteReviewById
+      parameters:
+        - name: reviewId
+          in: path
+          description: id of review to delete
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: review deleted
+        '400':
+          description: Bad Request. reviewId must be integer bigger or equal to 0
+        '404':
+          description: Review with specified id not found
+        '5XX':
+          description: Unexpected Error   
+          
+    put:
+      tags:
+        - Reviews
+      description: Update a review
+      operationId: updateReviewById
+      parameters:
+        - name: reviewId
+          in: path
+          description: id of review to update
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema: 
+              $ref: "#/components/schemas/Review"
+      responses:
+        '204':
+          description: Review updated
+        '400':
+          description: Bad Request. reviewId must be integer bigger or equal to 0
+        '404':
+          description: Review with specified id not found
+        '5XX':
+          description: Unexpected Error     
+          
+          
+     
+  /recommendations:
+    get:
+      tags:
+        - Recommendations
+      description: gets all recommendations
+      operationId: getRecommendations
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Recommendations"
+        '404':
+          description: Not found
+        '5XX':
+          description: Unexpected Error        
+                  
+    post:
+      tags:
+      - Recommendations
+      summary: create a new Recommendation
+      operationId: createRecommend
+      requestBody:
+        description: new recommend for tape
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Recommend"
+      responses:
+        "200":
+          description: Ok creating a recommend              
+            
+            
+  '/recommendations/{recommendId}':
+    get:
+      tags:
+      - Recommendations
+      operationId: getRecommendById
+      parameters: 
+        - name: recommendId
+          in: path
+          description: id of a recommend
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Successfully got recommend
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Recommendations"
+        '400':
+          description: Bad Request. recommendId must be integer bigger or equal to 0
+        '404':
+          description: Review with specified id not found
+        '5XX':
+          description: Unexpected Error           
+                
+    delete:
+      tags:
+        - Recommendations
+      description: Delete a recommend by id
+      operationId: deleteRecommendById
+      parameters:
+        - name: recommendId
+          in: path
+          description: id of review to delete
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: recommend deleted
+        '400':
+          description: Bad Request. recommendId must be integer bigger or equal to 0
+        '404':
+          description: Review with specified id not found
+        '5XX':
+          description: Unexpected Error      
+          
+    put:
+      tags:
+        - Recommendations
+      description: Update a recommend
+      operationId: updateRecommendById
+      parameters:
+        - name: recommendId
+          in: path
+          description: id of review to update
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema: 
+              $ref: "#/components/schemas/Recommend"
+      responses:
+        '204':
+          description: Review updated
+        '400':
+          description: Bad Request. recommendId must be integer bigger or equal to 0
+        '404':
+          description: Review with specified id not found
+        '5XX':
+          description: Unexpected Error        
+          
+          
+components:
+  schemas:
+    Video:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 54
+        director:
+          type: string
+          example: John Smith
+        title:
+          type: string
+          example: The Nun
+        eidr:
+          type: string
+          example: fff10102020
+        releaseDate:
+          type: string
+          format: YYYY-MM-DD
+          example: '1986-10-31'
+        videoType:
+          type: boolean
+          example: 0
+    Videos:
+      description: Videos in plural
+      type: array
+      items:
+        $ref: '#/components/schemas/Video'
+    Friend:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 54
+        name:
+          type: string
+          example: John Smith
+        address:
+          type: string
+          example: Dúfnahólar 10
+        email:
+          type: string
+          example: dui@dui.is
+        telephone:
+          type: string
+          example: 555444
+        rentedFilms:
+          type: array
+          items:
+            type: integer
+            
+    Friends:
+      description: Group of friends
+      type: array
+      items:
+        $ref: '#/components/schemas/Friend'
+        
+    BorrowSingular:
+      type: object
+      description: Info of Friend borrowing video
+      properties:
+        friendId:
+          type: integer
+          example: 54
+        videoId:
+          type: integer
+          example: 45
+        borrowDate:
+          type: string
+          format: date
+          example: '1986-10-30'
+          
+    BorrowPlural:
+      description: info of friends borrowing videos
+      type: array
+      items:
+        $ref: '#/components/schemas/BorrowSingular'
+        
+    Review:
+      description: info about a single review
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 54
+        videoId:
+          type: integer
+        friendId:
+          type: integer
+        stars:
+          type: integer
+          minimum: 1
+          maximum: 5
+          
+    Reviews:
+      description: a group of reviews
+      type: array
+      items:
+        $ref: "#/components/schemas/Review"
+        
+        
+    Recommend:
+      description: info about a single recommendation
+      type: object
+      properties:
+        id: 
+          type: integer
+          example: 1
+        videoId:
+          type: integer
+          example: 2
+        reviewId:
+          type: integer
+          example: 3
+        average_score:
+          type: number
+          format: float
+        stddev_score:
+          type: number
+          format: float
+          
+    Recommendations:
+      description: a group of recommendations
+      type: array
+      items:
+        $ref: '#/components/schemas/Recommend'
+        
+        
+        
+        
